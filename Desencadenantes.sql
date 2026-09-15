@@ -53,9 +53,7 @@ END//
 DELIMITER ;
 
 
-SELECT id, nombre, precio_base 
-FROM pizza 
-WHERE id = 1;
+SELECT id, nombre, precio_base FROM pizza WHERE id = 1;
 
 UPDATE pizza SET precio_base = 35000 WHERE id = 1;
 
