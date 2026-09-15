@@ -33,6 +33,12 @@ INSERT INTO cliente (nombre, telefono, direccion, email) VALUES
 ('Gonzalo Fuentes', '3125556666', 'Calle 135 #90-25, Bucaramanga', 'gonzalo.fuentes@email.com'),
 ('Mariana Núñez', '3126667777', 'Diagonal 90 #65-70, Floridablanca', 'mariana.nunez@email.com');
 
+INSERT INTO cliente (nombre, telefono, direccion, email, fecha_registro)
+VALUES 
+('Carlos Gómez', '3001111111', 'Calle 5 #200', 'carlos@email.com', NOW()),
+('María López', '3002222222', 'Calle 6 #300', 'maria@email.com', NOW()),
+('Pedro Martínez', '3003333333', 'Calle 7 #400', 'pedro@email.com', NOW());
+
 INSERT INTO ingredientes (nombre, stock, stock_minimo, disponibilidad) VALUES
 ('Tomate', 500, 50, 1),
 ('Queso Mozzarella', 400, 50, 1),
@@ -193,6 +199,12 @@ INSERT INTO pedido (cliente_fk, fecha_hora, estado, metodo_pago, total) VALUES
 (25, '2024-09-14 10:30:00', 'pendiente', 'efectivo', 49000),
 (26, '2024-09-14 11:45:00', 'entregado', 'aplicacion', 61000);
 
+INSERT INTO pedido (cliente_fk, fecha_hora, estado, metodo_pago, total)
+VALUES 
+(31, NOW(), 'pendiente', 'efectivo', 55000),
+(32, NOW(), 'pendiente', 'tarjeta', 48000),
+(33, NOW(), 'pendiente', 'efectivo', 62000);
+
 INSERT INTO detalle_pedido (pedido_fk, pizza_fk, cantidad, precio_unitario) VALUES
 (1, 1, 2, 25000),
 (2, 3, 2, 32000),
@@ -225,6 +237,12 @@ INSERT INTO detalle_pedido (pedido_fk, pizza_fk, cantidad, precio_unitario) VALU
 (29, 27, 1, 32000),
 (30, 28, 1, 45000);
 
+INSERT INTO detalle_pedido (pedido_fk, pizza_fk, cantidad, precio_unitario)
+VALUES 
+(31, 1, 2, 25000),
+(32, 2, 1, 22000),
+(33, 3, 3, 28000);
+
 INSERT INTO domicilio (pedido_fk, repartidor_fk, hora_salida, hora_entrega, distancia, costo_envio) VALUES
 (1, 1, '2024-09-10 12:45:00', '2024-09-10 13:15:00', 2.5, 5000),
 (3, 2, '2024-09-10 14:15:00', '2024-09-10 14:45:00', 3.0, 5000),
@@ -256,3 +274,9 @@ INSERT INTO domicilio (pedido_fk, repartidor_fk, hora_salida, hora_entrega, dist
 (26, 27, '2024-09-14 11:00:00', '2024-09-14 11:30:00', 2.9, 5000),
 (28, 28, '2024-09-13 16:15:00', '2024-09-13 16:45:00', 2.4, 5000),
 (30, 29, '2024-09-14 12:00:00', '2024-09-14 12:30:00', 3.5, 7000);
+
+INSERT INTO domicilio (pedido_fk, repartidor_fk, hora_salida, distancia, costo_envio)
+VALUES 
+(31, 1, NOW(), 2.5, 5000),
+(32, 2, NOW(), 3.0, 6000),
+(33, 3, NOW(), 2.0, 4000);
