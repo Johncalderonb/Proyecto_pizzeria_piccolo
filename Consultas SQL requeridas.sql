@@ -4,9 +4,11 @@ use pizzeria_don_piccolo;
 
 /* Clientes con pedidos entre 2 fechas (ENTRE) */
 
-select c.id, c.nombre, p.id, p.fecha_hora, p.totalFROM cliente c
-join pedido p ON c.id = p.cliente_fk where p.fecha_hora between '2024-09-10' and '2024-09-15'
-order by p.fecha_hora desc;
+SELECT c.id, c.nombre, p.id, p.fecha_hora, p.total
+FROM cliente c
+JOIN pedido p ON c.id = p.cliente_fk
+WHERE p.fecha_hora BETWEEN '2024-09-10' AND '2024-09-15'
+ORDER BY p.fecha_hora DESC;
 
 /* Pizzas mas vendidas (group by + count) */
 
