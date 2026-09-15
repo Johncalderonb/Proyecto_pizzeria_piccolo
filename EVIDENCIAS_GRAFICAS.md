@@ -1,35 +1,14 @@
 # 📸 Evidencias Gráficas - Pizzería Don Piccolo
 
-Documento interactivo para compilar evidencias visuales, capturas de ejecución y demostraciones del proyecto SQL.
-
----
-
-## 📋 Instrucciones para Insertar Imágenes
-
-Para agregar capturas de pantalla, guarda la imagen en la carpeta del proyecto y usa este formato:
-
-```markdown
-![Descripción de la imagen](./nombre_imagen.png)
-```
-
-**Ejemplo:**
-```markdown
-![Diagrama ER en MySQL Workbench](./diagrama_er.png)
-```
+Documento de evidencias visuales del proyecto SQL. Todas las capturas fueron tomadas en MySQL Workbench y se encuentran en la carpeta `imagenes/`.
 
 ---
 
 ## 🗂️ 1. Diagrama Entidad-Relación
 
-### 📸 Captura de Pantalla: Diagrama ER (MySQL Workbench)
+### 📸 Diagrama ER (MySQL Workbench)
 
-**Instrucciones:**
-1. Abre `Diagrama Bd pizzeria.mwb` en MySQL Workbench
-2. Ve a File → Export as PNG
-3. Guarda como `01_diagrama_er.png`
-4. Pega la imagen aquí:
-
-![Diagrama ER - MySQL Workbench](./01_diagrama_er.png)
+![Diagrama ER - MySQL Workbench](./imagenes/01_diagrama_er.png)
 
 ### Descripción Textual del Modelo
 
@@ -57,529 +36,294 @@ Para agregar capturas de pantalla, guarda la imagen en la carpeta del proyecto y
 
 ## ✅ 2. Creación de Base de Datos
 
-### 📸 Captura: Ejecución de Estructura de Tablas
+### 📸 Ejecución de `tablas_y_estructura.sql`
 
-**Pasos:**
-1. Ejecuta: `mysql -u root -p pizzeria_don_piccolo < tablas_y_estructura.sql`
-2. Toma captura mostrando el prompt y las tablas creadas
-3. Guarda como `02_creacion_tablas.png`
+![Creación de Tablas SQL](./imagenes/02_creacion_tablas.png)
 
-![Creación de Tablas SQL](./02_creacion_tablas.png)
-
-**Verificación:**
-```sql
-SHOW TABLES;
-DESCRIBE cliente;
-DESCRIBE pedido;
-```
-
-### 📸 Captura: Resultado de SHOW TABLES
-
-![SHOW TABLES - Resultados](./02b_show_tables.png)
+Captura de la creación de las 9 tablas del modelo (cliente, pizza, ingredientes, pizza_ingredientes, pedido, detalle_pedido, repartidor, domicilio, historial_precios).
 
 ---
 
-## 📥 3. Inserción de Datos
+## 👁️ 3. Vistas SQL
 
-### 📸 Captura: Carga de Datos Iniciales
+### Vista 1: Resumen de Pedidos por Cliente — `vw_resumen_pedidos_cliente`
 
-**Pasos:**
-1. Ejecuta: `mysql -u root -p pizzeria_don_piccolo < insert\ data.sql`
-2. Toma captura mostrando los INSERT completados
-3. Guarda como `03_insert_data.png`
-
-![INSERT Data - Ejecución](./03_insert_data.png)
-
-### 📸 Captura: Verificación de Registros
-
-**Query:**
 ```sql
-SELECT COUNT(*) as total_registros FROM cliente;
-SELECT COUNT(*) as total_registros FROM pedido;
+SELECT * FROM vw_resumen_pedidos_cliente
+WHERE cantidad_pedidos > 0
+ORDER BY total_gastado DESC;
 ```
 
-![Conteo de Registros](./03b_count_records.png)
+![Vista: Resumen Clientes](./imagenes/03_vista_cliente.png)
+
+Muestra, por cliente: cantidad de pedidos, total gastado y promedio por pedido.
 
 ---
 
-## 👁️ 4. Vistas SQL
+### Vista 2: Desempeño de Repartidores — `vw_desempeno_repartidores`
 
-### Vista 1: Resumen de Pedidos por Cliente
-
-#### 📸 Captura: Creación de Vista
-
-**Pasos:**
-1. Ejecuta el CREATE VIEW
-2. Toma captura de la ejecución
-3. Guarda como `04_vista_cliente.png`
-
-![Vista: Resumen Clientes](./04_vista_cliente.png)
-
-#### 📸 Captura: Resultado de la Vista
-
-**Query:**
 ```sql
-SELECT * FROM vw_resumen_pedidos_cliente 
-WHERE cantidad_pedidos > 0 
-ORDER BY total_gastado DESC 
-LIMIT 5;
-```
-
-![Resultado Vista Cliente](./04b_resultado_cliente.png)
-
-**Esperado:**
-```
-┌─────┬──────────────────┬─────────┬──────────────┬──────────────┬────────────────┐
-│ id  │ nombre           │ cantidad│ total_gastado│ promedio_    │ ...            │
-├─────┼──────────────────┼─────────┼──────────────┼──────────────┼────────────────┤
-│ 1   │ Carlos González  │ 15      │ $1,250,000   │ $83,333.33   │                │
-│ 2   │ María López      │ 8       │ $680,000     │ $85,000      │                │
-└─────┴──────────────────┴─────────┴──────────────┴──────────────┴────────────────┘
-```
-
----
-
-### Vista 2: Desempeño de Repartidores
-
-#### 📸 Captura: Resultados de Desempeño
-
-**Query:**
-```sql
-SELECT * FROM vw_desempeno_repartidores 
-WHERE numero_entregas > 0 
+SELECT * FROM vw_desempeno_repartidores
+WHERE numero_entregas > 0
 ORDER BY numero_entregas DESC;
 ```
 
-![Vista: Desempeño Repartidores](./05_vista_repartidores.png)
+![Vista: Desempeño Repartidores](./imagenes/04_vista_repartidores.png)
 
-**Análisis que debes ver:**
-- Repartidor más productivo
-- Tiempo promedio de entrega
-- Ingresos por repartidor
-- Zonas y distancias
+Muestra número de entregas, tiempo promedio de entrega, distancia promedio e ingresos por envíos, agrupados por repartidor y zona.
 
 ---
 
-### Vista 3: Stock de Ingredientes Bajo
+### Vista 3: Stock de Ingredientes Bajo — `vw_stock_ingredientes_bajo`
 
-#### 📸 Captura: Alertas de Inventario
-
-**Query:**
 ```sql
-SELECT * FROM vw_stock_ingredientes_bajo 
+SELECT * FROM vw_stock_ingredientes_bajo
 ORDER BY faltante DESC;
 ```
 
-![Vista: Stock Bajo](./06_vista_stock.png)
+![Vista: Stock Bajo](./imagenes/05_vista_stock.png)
 
-**Elementos a observar:**
-- Ingredientes en estado "crítico"
-- Cantidad faltante
-- Stock mínimo vs actual
+Ingredientes en o por debajo del stock mínimo, con la cantidad faltante y el estado (`crítico` / `en límite` / `ok`).
 
 ---
 
-## ⚙️ 5. Funciones Almacenadas
+## ⚙️ 4. Funciones y Procedimientos
 
-### Función 1: Calcular Total del Pedido
+### Función 1: Calcular Total del Pedido — `fn_calcular_total_pedido(p_pedido_id)`
 
-#### 📸 Captura: Creación de Función
-
-**Pasos:**
-1. Ejecuta el CREATE FUNCTION
-2. Toma captura
-3. Guarda como `07_funcion_total.png`
-
-![Creación Función Total](./07_funcion_total.png)
-
-#### 📸 Captura: Ejecución de la Función
-
-**Query:**
 ```sql
-SELECT 
-    p.id, 
-    c.nombre,
-    p.total,
-    fn_calcular_total_pedido(p.id) AS total_con_iva
+SELECT p.id, c.nombre, p.total,
+    fn_calcular_total_pedido(p.id) AS total_calculado_con_iva
 FROM pedido p
 JOIN cliente c ON p.cliente_fk = c.id
 LIMIT 5;
 ```
 
-![Resultado Función Total](./07b_resultado_total.png)
+![Función: Total del Pedido](./imagenes/06_funcion_total.png)
 
-**Esperado:**
-```
-Función calcula: Subtotal + Envío × 1.19 (IVA 19%)
-```
+Calcula subtotal de pizzas + costo de envío, y aplica IVA del 19%.
 
 ---
 
-### Función 2: Ganancia Neta Diaria
+### Función 2: Ganancia Neta Diaria — `fn_ganancia_neta_diaria(p_fecha)`
 
-#### 📸 Captura: Resultado de Ganancia Diaria
-
-**Query:**
 ```sql
-SELECT fn_ganancia_neta_diaria(CURDATE()) AS ganancia_hoy;
+SELECT fecha, total_pedidos, ventas,
+    ROUND(ventas * 0.30, 2) AS costo_ingredientes_30_porciento,
+    fn_ganancia_neta_diaria(fecha) AS ganancia_neta
+FROM (...) AS datos
+ORDER BY fecha DESC;
 ```
 
-![Función Ganancia Diaria](./08_funcion_ganancia.png)
+![Función: Ganancia Neta Diaria](./imagenes/07_ganancia_neta.png)
 
-**Cálculo visible:**
-```
-Ganancia = Ventas - (Ventas × 0.30 costo ingredientes)
-```
+Ganancia = Ventas del día (pedidos entregados) − 30% estimado de costo de ingredientes.
 
 ---
 
-## 🔔 6. Triggers (Disparadores)
+### Procedimiento: Marcar Pedido como Entregado — `sp_marcar_entregado(p_domicilio_id)`
 
-### Trigger 1: Descuento de Stock Automático
-
-#### 📸 Captura: ANTES - Stock Inicial
-
-**Query:**
 ```sql
-SELECT id, nombre, stock FROM ingredientes LIMIT 5;
+CALL sp_marcar_entregado(15);
+
+SELECT d.id, d.pedido_fk, d.hora_entrega, p.id AS pedido_id, p.estado
+FROM domicilio d
+JOIN pedido p ON d.pedido_fk = p.id
+WHERE d.id = 15;
 ```
 
-![Stock Antes de Trigger](./09_stock_antes.png)
+![Cambio de Estado del Pedido](./imagenes/08_cambio_de_estado.png)
 
-#### 📸 Captura: Ejecución INSERT (Trigger Activa)
+Actualiza la hora de entrega del domicilio y cambia el estado del pedido a `entregado`.
 
-**Query:**
+---
+
+## 🔔 5. Triggers (Disparadores)
+
+### Trigger 1: Descuento Automático de Stock — `tr_actualizar_stock_pedido`
+
 ```sql
 INSERT INTO detalle_pedido (pedido_fk, pizza_fk, cantidad, precio_unitario)
-VALUES (1, 1, 2, 25000);
+VALUES (1, 1, 1, 25000);
 ```
 
-![INSERT activando Trigger](./09b_insert_trigger.png)
+![Disparador: Detalle de Pedido](./imagenes/09_disparador_detalle_pedido.png)
 
-#### 📸 Captura: DESPUÉS - Stock Actualizado
-
-**Query:**
-```sql
-SELECT id, nombre, stock FROM ingredientes LIMIT 5;
-```
-
-![Stock Después de Trigger](./09c_stock_despues.png)
-
-**Verificar:** El stock debe haber disminuido automáticamente
+`AFTER INSERT` en `detalle_pedido`: descuenta del stock de ingredientes la cantidad necesaria para preparar la pizza.
 
 ---
 
-### Trigger 2: Auditoría de Precios
+### Trigger 2: Auditoría de Cambio de Precio — `tr_auditar_cambio_precio`
 
-#### 📸 Captura: UPDATE de Precio
-
-**Query:**
 ```sql
 UPDATE pizza SET precio_base = 35000 WHERE id = 1;
-```
 
-![UPDATE Precio](./10_update_precio.png)
-
-#### 📸 Captura: Historial Automático
-
-**Query:**
-```sql
-SELECT * FROM historial_precios 
-WHERE pizza_fk = 1 
+SELECT pizza_fk, precio_anterior, precio_nuevo, fecha_cambio, usuario_cambio
+FROM historial_precios
+WHERE pizza_fk = 1
 ORDER BY fecha_cambio DESC;
 ```
 
-![Historial Precios](./10b_historial_precios.png)
+![Disparador: Cambio de Precio](./imagenes/10_disparador_cambio_de_precio.png)
 
-**Verificar:** Registro automático de precio anterior y nuevo
-
----
-
-### Trigger 3: Liberar Repartidor
-
-#### 📸 Captura: Repartidor Disponible = 0
-
-**Antes:**
-```sql
-SELECT id, nombre, disponible FROM repartidor WHERE id = 1;
-```
-
-![Repartidor Ocupado](./11_repartidor_antes.png)
-
-#### 📸 Captura: Marcar Entrega Completada
-
-**Query:**
-```sql
-UPDATE domicilio SET hora_entrega = NOW() WHERE id = 15;
-```
-
-![UPDATE Entrega](./11b_update_entrega.png)
-
-#### 📸 Captura: Repartidor Disponible = 1
-
-**Después:**
-```sql
-SELECT id, nombre, disponible FROM repartidor WHERE id = 1;
-```
-
-![Repartidor Liberado](./11c_repartidor_despues.png)
-
-**Verificar:** disponible cambió a 1 automáticamente
+`BEFORE UPDATE` en `pizza`: si el precio cambia, registra el precio anterior y el nuevo en `historial_precios`.
 
 ---
 
-## 📊 7. Consultas Avanzadas
-
-### Consulta 1: Pizzas Más Vendidas
-
-#### 📸 Captura: Ejecución
+### Trigger 3: Liberar Repartidor — `tr_liberar_repartidor`
 
 ```sql
-SELECT 
-    p.id,
-    p.nombre,
-    COUNT(dp.id) AS cantidad_vendida
-FROM pizza p 
-LEFT JOIN detalle_pedido dp ON p.id = dp.pizza_fk 
+UPDATE domicilio SET hora_entrega = NOW() WHERE id = 41;
+```
+
+![Disparador: Cambio de Estado del Repartidor](./imagenes/11_disparador_cambio_estado_repartidor.png)
+
+`AFTER UPDATE` en `domicilio`: cuando se registra la hora de entrega, marca al repartidor asignado como `disponible`.
+
+---
+
+## 📊 6. Consultas SQL Avanzadas
+
+### Consulta 1: Clientes con Pedidos entre 2 Fechas (BETWEEN)
+
+```sql
+SELECT c.id, c.nombre, p.id, p.fecha_hora, p.total
+FROM cliente c
+JOIN pedido p ON c.id = p.cliente_fk
+WHERE p.fecha_hora BETWEEN '2024-09-10' AND '2024-09-15'
+ORDER BY p.fecha_hora DESC;
+```
+
+![Consulta: Entre 2 Fechas](./imagenes/12_consulta_entre_2_fechas.png)
+
+---
+
+### Consulta 2: Pizzas Más Vendidas (GROUP BY + COUNT)
+
+```sql
+SELECT p.id, p.nombre, COUNT(dp.id) AS cantidad_vendida
+FROM pizza p
+LEFT JOIN detalle_pedido dp ON p.id = dp.pizza_fk
 GROUP BY p.id, p.nombre
-ORDER BY cantidad_vendida DESC 
+ORDER BY cantidad_vendida DESC
 LIMIT 10;
 ```
 
-![Pizzas Más Vendidas](./12_pizzas_top10.png)
-
-**Analiza:**
-- Top 3 pizzas
-- Porcentaje de ventas
-- Pizza menos vendida
+![Consulta: Pizzas Más Vendidas](./imagenes/13_consulta_pizzas_mas_vendidas.png)
 
 ---
 
-### Consulta 2: Tiempo Promedio por Zona
-
-#### 📸 Captura: Ejecución
+### Consulta 3: Pedidos por Repartidor
 
 ```sql
-SELECT 
-    r.zona,
-    ROUND(AVG(TIMESTAMPDIFF(MINUTE, d.hora_salida, d.hora_entrega)), 2) 
-        AS promedio_minutos,
-    COUNT(d.id) AS total_entregas
+SELECT r.id, r.nombre, r.zona, COUNT(d.id) AS total_entregas
 FROM repartidor r
-LEFT JOIN domicilio d ON r.id = d.repartidor_fk 
+LEFT JOIN domicilio d ON r.id = d.repartidor_fk
+GROUP BY r.id, r.nombre, r.zona
+ORDER BY r.id;
+```
+
+![Consulta: Pedidos por Repartidor](./imagenes/14_consulta_pedidos_por_repartidor.png)
+
+---
+
+### Consulta 4: Promedio de Entrega por Zona (AVG + JOIN)
+
+```sql
+SELECT r.zona, AVG(TIMESTAMPDIFF(MINUTE, d.hora_salida, d.hora_entrega)) AS promedio_minutos
+FROM repartidor r
+LEFT JOIN domicilio d ON r.id = d.repartidor_fk
 WHERE d.hora_entrega IS NOT NULL
-GROUP BY r.zona
-ORDER BY promedio_minutos ASC;
+GROUP BY r.zona;
 ```
 
-![Promedio por Zona](./13_promedio_zona.png)
-
-**Analiza:**
-- Zona más rápida
-- Zona más lenta
-- Diferencia de tiempo
+![Consulta: Promedio por Zona](./imagenes/15_consulta_promedios.png)
 
 ---
 
-### Consulta 3: Clientes VIP (>$100k)
-
-#### 📸 Captura: Ejecución
+### Consulta 5: Búsqueda por Coincidencia Parcial (LIKE)
 
 ```sql
-SELECT 
-    c.id,
-    c.nombre,
-    COUNT(p.id) AS total_pedidos,
-    SUM(p.total) AS total_gastado
+SELECT id, nombre, descripcion, precio_base, tipo
+FROM pizza
+WHERE nombre LIKE '%pollo%'
+ORDER BY nombre;
+```
+
+![Consulta: Búsqueda con LIKE](./imagenes/16_consulta_con_like.png)
+
+---
+
+### Consulta 6: Clientes Frecuentes (Subconsulta)
+
+```sql
+SELECT c.id, c.nombre, c.telefono, COUNT(p.id) AS total_pedidos, SUM(p.total) AS total_gastado
 FROM cliente c
-LEFT JOIN pedido p ON c.id = p.cliente_fk 
-GROUP BY c.id, c.nombre
-HAVING SUM(p.total) > 100000 
-ORDER BY total_gastado DESC;
+LEFT JOIN pedido p ON c.id = p.cliente_fk
+WHERE p.id IS NOT NULL
+GROUP BY c.id, c.nombre, c.telefono
+HAVING COUNT(p.id) >= 1
+ORDER BY total_pedidos DESC;
 ```
 
-![Clientes VIP](./14_clientes_vip.png)
+![Consulta: Clientes Frecuentes](./imagenes/17_consulta_cliente_frecuente.png)
 
-**Analiza:**
-- Cliente #1 en gasto
-- Patrón de compras
-- Segmentación corporativo vs individual
+> **Nota:** la consulta de clientes que gastaron más de $100.000 (HAVING SUM) no tiene una captura dedicada dentro de las 17 imágenes disponibles; puede agregarse como `18_consulta_clientes_vip.png` si se captura más adelante.
 
 ---
 
-## 📈 8. Dashboard Ejecutivo
+## 📋 7. Resumen de Evidencias Capturadas
 
-### 📸 Captura: Dashboard con KPIs
-
-**Crear un resumen visual con:**
-- Total de ventas
-- Total de pedidos
-- Clientes únicos
-- Repartidores activos
-- Ingredientes críticos
-
-**Opciones:**
-1. **Usar Excel:** Crear gráficos en Excel y capturar
-2. **Usar MySQL UI:** Usar interfaz visual si está disponible
-3. **Usar texto:** Tabla con KPIs importantes
-
-![Dashboard KPIs](./15_dashboard.png)
-
-**Métricas sugeridas:**
-```
-├── Ventas Totales: $XXX,XXX,XXX
-├── Pedidos Entregados: XX%
-├── Clientes Activos: XXX
-├── Repartidores en Ruta: X/Y
-└── Stock Crítico: X ingredientes
-```
-
----
-
-## 🔍 9. Verificaciones de Integridad
-
-### 📸 Captura: Pedidos sin Cliente
-
-**Query:**
-```sql
-SELECT * FROM pedido 
-WHERE cliente_fk NOT IN (SELECT id FROM cliente);
-```
-
-![Validación Integridad 1](./16_validacion1.png)
-
-**Esperado:** 0 registros (tabla limpia)
-
----
-
-### 📸 Captura: Detalles Huérfanos
-
-**Query:**
-```sql
-SELECT * FROM detalle_pedido 
-WHERE pedido_fk NOT IN (SELECT id FROM pedido);
-```
-
-![Validación Integridad 2](./16b_validacion2.png)
-
-**Esperado:** 0 registros (relaciona correctamente)
-
----
-
-### 📸 Captura: Stock Negativo
-
-**Query:**
-```sql
-SELECT * FROM ingredientes WHERE stock < 0;
-```
-
-![Validación Integridad 3](./16c_validacion3.png)
-
-**Esperado:** 0 registros (triggers protege)
-
----
-
-## 📋 10. Resumen de Evidencias Capturadas
-
-### Checklist de Capturas Requeridas
+### Checklist de Capturas
 
 ```markdown
-## Imágenes a Capturar
+### Estructura Base
+- [x] 01_diagrama_er.png — Diagrama ER de MySQL Workbench
+- [x] 02_creacion_tablas.png — Ejecución de creación de tablas
 
-### Estructura Base (2 imágenes)
-- [ ] 01_diagrama_er.png — Diagrama ER de MySQL Workbench
-- [ ] 02_creacion_tablas.png — Ejecución CREATE TABLE
-- [ ] 02b_show_tables.png — Resultado SHOW TABLES
+### Vistas (3)
+- [x] 03_vista_cliente.png — Vista resumen de pedidos por cliente
+- [x] 04_vista_repartidores.png — Vista desempeño de repartidores
+- [x] 05_vista_stock.png — Vista stock de ingredientes bajo
 
-### Datos (2 imágenes)
-- [ ] 03_insert_data.png — Ejecución INSERT
-- [ ] 03b_count_records.png — Verificación de conteos
+### Funciones y Procedimientos (3)
+- [x] 06_funcion_total.png — Función calcular total del pedido
+- [x] 07_ganancia_neta.png — Función ganancia neta diaria
+- [x] 08_cambio_de_estado.png — Procedimiento marcar pedido entregado
 
-### Vistas (6 imágenes)
-- [ ] 04_vista_cliente.png — Creación vista cliente
-- [ ] 04b_resultado_cliente.png — Resultado SELECT vista cliente
-- [ ] 05_vista_repartidores.png — Resultado vista repartidores
-- [ ] 06_vista_stock.png — Resultado vista stock bajo
+### Triggers (3)
+- [x] 09_disparador_detalle_pedido.png — Trigger descuento de stock
+- [x] 10_disparador_cambio_de_precio.png — Trigger auditoría de precio
+- [x] 11_disparador_cambio_estado_repartidor.png — Trigger liberar repartidor
 
-### Funciones (4 imágenes)
-- [ ] 07_funcion_total.png — Creación función total
-- [ ] 07b_resultado_total.png — Resultado función total
-- [ ] 08_funcion_ganancia.png — Resultado función ganancia
+### Consultas Avanzadas (6)
+- [x] 12_consulta_entre_2_fechas.png — Clientes con pedidos entre 2 fechas
+- [x] 13_consulta_pizzas_mas_vendidas.png — Pizzas más vendidas
+- [x] 14_consulta_pedidos_por_repartidor.png — Pedidos por repartidor
+- [x] 15_consulta_promedios.png — Promedio de entrega por zona
+- [x] 16_consulta_con_like.png — Búsqueda con LIKE
+- [x] 17_consulta_cliente_frecuente.png — Clientes frecuentes
 
-### Triggers (6 imágenes)
-- [ ] 09_stock_antes.png — Stock ANTES de trigger
-- [ ] 09b_insert_trigger.png — INSERT ejecutando trigger
-- [ ] 09c_stock_despues.png — Stock DESPUÉS de trigger
-- [ ] 10_update_precio.png — UPDATE de precio
-- [ ] 10b_historial_precios.png — Historial automático
-- [ ] 11_repartidor_antes.png — Repartidor ocupado
-- [ ] 11b_update_entrega.png — UPDATE completar entrega
-- [ ] 11c_repartidor_despues.png — Repartidor liberado
-
-### Consultas (3 imágenes)
-- [ ] 12_pizzas_top10.png — Pizzas más vendidas
-- [ ] 13_promedio_zona.png — Tiempo promedio por zona
-- [ ] 14_clientes_vip.png — Clientes que gastaron >$100k
-
-### Dashboard (1 imagen)
-- [ ] 15_dashboard.png — Dashboard ejecutivo con KPIs
-
-### Validaciones (3 imágenes)
-- [ ] 16_validacion1.png — Pedidos sin cliente
-- [ ] 16b_validacion2.png — Detalles huérfanos
-- [ ] 16c_validacion3.png — Stock negativo
-
-**TOTAL: 32 imágenes a capturar**
-```
-
----
-
-## 📸 Notas sobre Capturas de Pantalla
-
-### Recomendaciones
-1. **Resolución:** 1280×720 mínimo (para claridad)
-2. **Formato:** PNG o JPG
-3. **Nombre:** Usa el esquema `##_descripcion.png`
-4. **Ubicación:** Guarda en la carpeta del proyecto
-5. **Región:** Captura solo la ventana relevante (sin barras del SO)
-
-### Herramientas Recomendadas
-- **Windows:** Presiona `Win + Shift + S` (recorte de pantalla)
-- **Mac:** `Cmd + Shift + 4`
-- **Linux:** `gnome-screenshot`
-- **Alternativa:** ShareX, Snagit
-
-### Formato de Captura
-
-```
-┌─────────────────────────────────────────┐
-│ MySQL Workbench / Terminal              │
-│ (pantalla de donde tomas la captura)    │
-│                                         │
-│ Query/Resultado visible y legible       │
-│                                         │
-└─────────────────────────────────────────┘
+**TOTAL: 17 imágenes capturadas y enlazadas**
 ```
 
 ---
 
 ## ✅ Checklist Final
 
-- [ ] Diagrama ER capturado
-- [ ] Tablas creadas y verificadas
-- [ ] Datos insertados correctamente
-- [ ] 3 Vistas funcionando
-- [ ] 2 Funciones probadas
-- [ ] 3 Triggers activos
-- [ ] Consultas avanzadas ejecutadas
-- [ ] Dashboard con KPIs
-- [ ] Validaciones completadas
-- [ ] Todas las imágenes insertadas
+- [x] Diagrama ER capturado
+- [x] Tablas creadas y verificadas
+- [x] 3 Vistas funcionando
+- [x] 2 Funciones probadas
+- [x] 1 Procedimiento probado
+- [x] 3 Triggers activos
+- [x] 6 Consultas avanzadas ejecutadas
+- [x] Todas las imágenes disponibles insertadas en el documento
 
 ---
 
-**Proyecto:** Pizzería Don Piccolo  
-**Documentación:** Evidencias Gráficas Interactivo  
-**Versión:** 2.0 (Con espacios para imágenes)  
-**Desarrollador:** John Faver Calderón Barragán  
-**Última actualización:** 2024-09-15
+**Proyecto:** Pizzería Don Piccolo
+**Documentación:** Evidencias Gráficas
+**Versión:** 3.0 (Enlazada a las imágenes reales de `imagenes/`)
+**Desarrollador:** John Faver Calderón Barragán
+**Última actualización:** 2026-09-15
